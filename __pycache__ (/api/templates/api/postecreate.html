@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Créer un Poste</h2>
+    <form method="POST" action="{% url 'http://127.0.0.1:8000/api/poste/' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="poste">Poste:</label>
+            <input type="text" id="poste" name="poste" required>
+        </div>
+        <div class="form-group">
+            <label for="degret">Degret:</label>
+            <input type="text" id="degret" name="degret" required>
+        </div>
+        <div class="form-group">
+            <label for="slairebase">Salaire de Base:</label>
+            <input type="number" id="slairebase" name="slairebase" required>
+        </div>
+        <div class="form-group">
+            <label for="salairefinale">Salaire Final:</label>
+            <input type="number" id="salairefinale" name="salairefinale" required>
+        </div>
+        <div class="form-group">
+            <label for="primeAdministration">Prime d'Administration:</label>
+            <input type="number" id="primeAdministration" name="primeAdministration" required>
+        </div>
+        <div class="form-group">
+            <label for="primeAutre">Autre Prime:</label>
+            <input type="number" id="primeAutre" name="primeAutre" required>
+        </div>
+        <div class="form-group">
+            <label for="section">Section:</label>
+            <select id="section" name="section" required>
+                {% for section in sections %}
+                    <option value="{{ section.id }}">{{ section.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="administration">Administration:</label>
+            <select id="administration" name="administration" required>
+                {% for administration in administrations %}
+                    <option value="{{ administration.id }}">{{ administration.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit">Créer</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

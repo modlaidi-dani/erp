@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static  heroicons %}
+
+{% block body_class %}{% endblock %}
+{% block content %}
+
+<div 
+x-data="{ 
+	menuOpen: false, 
+	basicSignInModal: false,
+	basicSignUpModal: false,
+	advanceSignInModal: false,
+	advanceSignUpModal: false,
+}" 
+class="flex flex-col min-h-screen custom-scrollbar"
+>
+<!-- start::Black overlay -->
+<div :class="menuOpen ? 'block' : 'hidden'" @click="menuOpen = false" class="fixed  inset-0 bg-black opacity-50 transition-opacity lg:hidden"></div>
+<!-- end::Black overlay -->
+ {% include 'header.html' %}
+ {% include 'tabs.html' with active_tab="poste" %}
+ <div class=" w-full flex flex-row">
+	{% include "sidebar_poste.html" %}
+  <div class="h-full w-full"  x-data="table()">
+	<!-- Main content header -->
+	<main class="block w-full h-full px-2 overflow-hidden " >
+          <div class="flex flex-col items-start justify-between space-y-4 border-b lg:items-center lg:space-y-0 lg:flex-row"  >                                                                                                                                                    
+            <h1 class="text-2xl font-semibold whitespace-nowrap pt-4">Grille de salaire </h1>          
+          </div>          
+         
+        
+         <div class="flex flex-col mt-5">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden border-b border-gray-200 rounded-md shadow-md">
+                    <table class="min-w-full overflow-x-scroll divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Categorie</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Indice minimal</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">1</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">2</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">3</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">4</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">5 </th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">6 </th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">7 </th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">8 </th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">9</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">10</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">11</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">12</th>
+
+                            </tr>
+                        </thead>
+                    
+                        <tbody class="bg-white divide-y divide-gray-200" >
+                            <template x-for="item in my_array">
+                                <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.sinf"></td>
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.sinfval"></td>
+                                        <template x-for="elem in item.degrees">
+                                            <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="elem.val"></td>
+                                          </template>    
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                 	
+               
+                </div>
+              
+              </div>
+            </div>
+         </div>
+       
+        <div>
+       
+        <script>
+            function table (){
+                return{
+                    my_array: [],
+                    degreitems: [1,2,3,4,5,6,7,8,9,10,11,12],
+                    init(){
+                        const data_array = {{ data | safe }};
+                        const result = {};
+                        
+                        data_array.forEach(element => {
+                            let sinf = element.sinf;
+                            
+                            // Check if the sinf key already exists in the result object
+                            if (!result[sinf]) {
+                                result[sinf] = {
+                                    sinf: sinf,
+                                    sinfval: element.sinfval,
+                                    degrees: []
+                                };
+                            }
+                            
+                            // Add the { degret, val } object to the degrees array
+                            result[sinf].degrees.push({ degret: element.degret, val: element.val });
+                        });
+                        
+                        this.my_array = result;
+                    }
+                }
+            }
+      </script>
+    
+	<!-- end Main content  -->
+
+  </div>
+</div>
+</div>
+</div>
+
+{% endblock content %}

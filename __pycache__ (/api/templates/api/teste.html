@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static heroicons %}
+
+{% block content %}
+<body x-data="table()" x-init="init()">
+    <h1>Measurement List</h1>
+    <table class="">
+        <thead>
+            <tr>
+                <th>Categorie</th>
+                <th>Indice minimal</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+                <th>12</th>
+            </tr>
+        </thead>
+        <tbody>
+                <template x-for="item in my_array">
+                    <tr>   
+                      <td x-text="item.sinf"></td>
+                      <td x-text="item.sinfval"></td>
+                      <template x-for="elem in item.degrees">
+                        <td x-text="elem.val"></td>
+                      </template>                    
+                    </tr>
+                </template>
+                
+         
+        </tbody>
+    </table>
+  <script>
+        function table (){
+            return{
+                my_array: [],
+                degreitems: [1,2,3,4,5,6,7,8,9,10,11,12],
+                init(){
+                    const data_array = {{ data | safe }};
+                    const result = {};
+                    
+                    data_array.forEach(element => {
+                        let sinf = element.sinf;
+                        
+                        // Check if the sinf key already exists in the result object
+                        if (!result[sinf]) {
+                            result[sinf] = {
+                                sinf: sinf,
+                                sinfval: element.sinfval,
+                                degrees: []
+                            };
+                        }
+                        
+                        // Add the { degret, val } object to the degrees array
+                        result[sinf].degrees.push({ degret: element.degret, val: element.val });
+                    });
+                    
+                    this.my_array = result;
+                }
+            }
+        }
+  </script>
+</body>
+{% endblock content %}
