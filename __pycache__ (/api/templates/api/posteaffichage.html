@@ -255,28 +255,18 @@ class="flex flex-col min-h-screen custom-scrollbar"
                           "
                           required  
                           >
-                          <option value="" disabled selected>Salarié</option>	
+                          <option value="" disabled selected>poste</option>	
                           <template x-for="item in dat_array">
                             <option x-bind:value="item.posteId" x-text="item.nameposte"></option>
                           </template>
                       </select>
                   </div>
-                    <div class="form-group">
-                        <label for="poste">Poste:</label>
-                        <input type="text" id="poste" name="poste" required>
-                    </div>
+
                     <div class="form-group">
                         <label for="degret">Degret:</label>
                         <input type="text" id="degret" name="degret" required>
                     </div>
-                    <div class="form-group">
-                        <label for="slairebase">Salaire de Base:</label>
-                        <input type="number" id="slairebase" name="slairebase" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="salairefinale">Salaire Final:</label>
-                        <input type="number" id="salairefinale" name="salairefinale" required>
-                    </div>
+
                     <div class="form-group">
                         <label for="primeAdministration">Prime d'Administration:</label>
                         <input type="number" id="primeAdministration" name="primeAdministration" required>
@@ -285,23 +275,36 @@ class="flex flex-col min-h-screen custom-scrollbar"
                         <label for="primeAutre">Autre Prime:</label>
                         <input type="number" id="primeAutre" name="primeAutre" required>
                     </div>
-                    <div class="form-group">
-                        <label for="section">Section:</label>
-                        <select id="section" name="section" required>
-                            {% for section in sections %}
-                                <option value="{{ section.id }}">{{ section.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="administration">Administration:</label>
-                        <select id="administration" name="administration" required>
-                            {% for administration in administrations %}
-                                <option value="{{ administration.id }}">{{ administration.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
+                  </label>
+                  <div>
+                    <label class="block text-gray-700 font-semibold mb-2" >
+                      administration <span class="text-red-600">*</span>
+                      </label>
+                  <select
+                     class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                     required  
+                     >
+                     <option value="" disabled selected>Administration</option>	
+                     <template x-for="item in administration_array">
+                       <option x-bind:value="item.id" x-text="item.name"></option>
+                     </template>
+                 </select>
+             </div>
+             <div>
+              <label class="block text-gray-700 font-semibold mb-2" >
+                <Section>Section 
+                </label>
+              <select
+                 class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                 required  
+                 >
+                 <option value="" disabled selected>Section</option>	
+                 <template x-for="item in section_array">
+                   <option x-bind:value="item.id" x-text="item.name"></option>
+                 </template>
+             </select>
+           </div>
+           </div>                    <div class="form-group">
                         <button  x-on:click="addPoste()">Créer</button>
                     </div>
                 </div>
@@ -343,7 +346,8 @@ class="flex flex-col min-h-screen custom-scrollbar"
               {% if data and dat  %}
                 data_array: {{ data | safe }},
                 dat_array:{{ dat | safe }},
-
+                administration_array:{{ administration | safe }},
+                section_array:{{ section | safe }},
 
               {% endif %}
 

@@ -45,6 +45,10 @@ class Postetemp(View):
             post["sinf"]=sinf.sinf
             post["sinfindice"]=sinf.numind
             print(post)
+        administration=requests.get("http://127.0.0.1:8000/api/administratuion/")
+        administrations= administration.json()
+        section=requests.get("http://127.0.0.1:8000/api/section/")
+        section=section.json()
 
         
-        return render(request, 'api/posteaffichage.html', {"data": datas,"dat":postesdispo })
+        return render(request, 'api/posteaffichage.html', {"data": datas,"dat":postesdispo, "administration":administrations, "section":section })
