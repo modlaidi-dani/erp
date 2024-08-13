@@ -50,5 +50,5 @@ class Postetemp(View):
         section=requests.get("http://127.0.0.1:8000/api/section/")
         section=section.json()
 
-        
+        print(postesdispo)
         return render(request, 'api/posteaffichage.html', {"data": datas,"dat":postesdispo, "administration":administrations, "section":section })

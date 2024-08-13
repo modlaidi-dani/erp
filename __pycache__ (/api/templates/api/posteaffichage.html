@@ -249,17 +249,18 @@ class="flex flex-col min-h-screen custom-scrollbar"
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           id="salarie"
                           name="salarie"
-                          x-model="poste"
-                          x-on:change="
-                            salarie = $event.target.value;
-                          "
+                          x-model="postedispo"
+                          x-on:change="handleChange($event)"
                           required  
                           >
-                          <option value="" disabled selected>poste</option>	
+                        
                           <template x-for="item in dat_array">
-                            <option x-bind:value="item.posteId" x-text="item.nameposte"></option>
+                            <option x-bind:value="item.id" x-text="item.nameposte"></option>
                           </template>
+                          
                       </select>
+                      <p class="mt-2">Valeur sélectionnée : <span x-text="postedispo"></span></p>
+
                   </div>
 
                     <div class="form-group">
@@ -316,7 +317,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
         <script>
           function client(){
             return{
-                poste:'',
+                postedispo:'',
                 degrie:'',
                 categoret:'',
                 sinf:'',
@@ -325,7 +326,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 asministration:'',
                 primeAdministration:'',
                 primeAutre:'',
-
+          
                 isOpen:false,
               printInvoice() {
                 var printContents = this.$refs.printTemplate.innerHTML;
@@ -389,7 +390,14 @@ class="flex flex-col min-h-screen custom-scrollbar"
                     (clientAddress.toLowerCase().includes(search.toLowerCase()))
                   );
               },
+              handleChange(event) {
+                  const onj=this.postedispo
+                  const selectedObject = this.dat_array.find(elm => elm.id = onj);
+                  this.sinf=selectedObject.sinf;
+                  this.categoret=selectedObject.sinfindice;
+                  console.log(this.sinf,this.categoret)
 
+              },
               addPoste(){ 
                 if (!this.motif) {
                     alert('Veuillez introduire le motif de l\'absence.');
