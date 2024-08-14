@@ -1679,22 +1679,28 @@ class PagePaieCommercial(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                     salarie_user = CustomUser.objects.filter(username = username).first()
                     if salarie_user:
                         chiffreAffaire = salarie_user.monChiffreAffaire(month)
+                        chiffreAffaire = 58356500
                         if chiffreAffaire <= 10000000:
                             tranches = (chiffreAffaire) / 10000000
                             salaire_commercial = (tranches * 30000)
                         elif 10000000 < chiffreAffaire <= 20000000:
                             tranches = (chiffreAffaire - 10000000) / 10000000
-                            salaire_commercial = 30000 + (tranches * 25000)
+                            salaire_commercial = 50000 + (tranches * 25000)
                         elif 20000000 < chiffreAffaire <= 30000000:
                             tranches = (chiffreAffaire - 20000000) / 10000000
                             salaire_commercial = 55000 + (tranches * 20000)
-                        elif 30000000 < chiffreAffaire <= 40000000:
-                            tranches = (chiffreAffaire - 30000000) / 10000000
-                            salaire_commercial = 75000 + (tranches * 15000)
-                        else:  # chiffreAffaire > 40000000
-                            tranches = (chiffreAffaire - 40000000) / 10000000
-                            salaire_commercial = 75000 + (tranches * 15000)
-
+                        elif 30000000 < chiffreAffaire: 
+                            salaire_commercial=75000
+                            chifresup=(chiffreAffaire-30000000)
+                            print(chifresup)
+                            for repet in range(int(chifresup/10000000)+1):
+                
+                                if chifresup<=10000000:
+                                    salaire_commercial = salaire_commercial + ((chifresup/10000000)*15000)
+                                else:
+                                    salaire_commercial=salaire_commercial+ 15000
+                                    chifresup=chifresup-10000000
+                        print(chiffreAffaire, salaire_commercial, username)
                 # Initialize a variable to count the absent pointages
                 absent_count = 0
                 daysnotworked = 0
@@ -1748,6 +1754,7 @@ class PagePaieCommercial(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 if salary.fonction == 'Commercial' or salary.fonction == 'Responsable Commercial':
                     all_renumeration.append(renum_dict)
         context["liste_paie"] = all_renumeration
+       
         return context
         
 class PageReglementPaie(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

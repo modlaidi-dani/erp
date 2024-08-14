@@ -259,7 +259,8 @@ class="flex flex-col min-h-screen custom-scrollbar"
                           </template>
                           
                       </select>
-                      <p class="mt-2">Valeur sélectionnée : <span x-text="postedispo"></span></p>
+                      <p class="mt-2">Valeur sélectionnée : <span x-text="sinf"></span></p>
+                      <p class="mt-2">Valeur sélectionnée : <span x-text="categoret"></span></p>
 
                   </div>
 
@@ -320,8 +321,8 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 postedispo:'',
                 degrie:'',
                 categoret:'',
-                sinf:'',
-                index:0,
+              
+                indice:0,
                 section:'',
                 asministration:'',
                 primeAdministration:'',
@@ -391,13 +392,13 @@ class="flex flex-col min-h-screen custom-scrollbar"
                   );
               },
               handleChange(event) {
-                  const onj=this.postedispo
-                  const selectedObject = this.dat_array.find(elm => elm.id = onj);
-                  this.sinf=selectedObject.sinf;
-                  this.categoret=selectedObject.sinfindice;
-                  console.log(this.sinf,this.categoret)
+                const onj = this.postedispo;
+                const selectedIndex = this.dat_array.findIndex(elm => elm.id == onj);
+                this.sinf= this.dat_array[selectedIndex].sinf
+                this.categoret= this.dat_array[selectedIndex].sinf
+                
 
-              },
+                                  },
               addPoste(){ 
                 if (!this.motif) {
                     alert('Veuillez introduire le motif de l\'absence.');
