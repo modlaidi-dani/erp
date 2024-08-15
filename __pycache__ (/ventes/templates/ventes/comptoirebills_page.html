@@ -450,6 +450,11 @@ class="flex flex-col min-h-screen custom-scrollbar"
 						}
 						this.printInvoice();
 					},
+					{% if context   %}
+                		data_array: {{ context | safe }},
+
+              		{% endif %}
+					console.log(this.data_array)
 					printInvoice() {
 						var printContents = this.$refs.printTemplate.innerHTML;
 						document.body.innerHTML = printContents;
@@ -523,6 +528,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
 		  				const start = (this.currentPage - 1) * this.pageSize;
 		  				const end = start + this.pageSize;
 		  				return this.filteredProducts.slice(start, end);
+						console.log(this.filteredProducts)
 	  				},
 					prevPage() {
 					  if (this.currentPage > 1) {
@@ -555,7 +561,10 @@ class="flex flex-col min-h-screen custom-scrollbar"
 					},
 					init() {
 						var products = [];
-						{% for bon in bons_sorties %}    
+						console.log(this.bons_sorties)
+						console.log(this.produits_en_bon_comptoir)
+						{% for bon in bons_sorties %}
+
 						    var observation = "{{bon.observation | safe}}";
                             var numSeriesFormatted = "";
                             if (observation) {
@@ -594,7 +603,8 @@ class="flex flex-col min-h-screen custom-scrollbar"
 							return existingProduct.reference === productData.reference;
 						});
 						if (!exists) {
-							products.push(productData);					
+							products.push(productData);
+									
 						}
 						{% endfor %}
 

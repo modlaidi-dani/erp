@@ -30,13 +30,15 @@ class SectionSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 class PostedispoSerialiser(serializers.ModelSerializer):
+    catigory=serializers.CharField(source='sinf.sinf',read_only=True )	
+    indiceM=serializers.CharField(source='sinf.numind',read_only=True )	
     class Meta:
         model=Postedispo
         fields="__all__"
 
 class PosteSerializer(serializers.ModelSerializer):
-    valeurind=TableSerializer(read_only=True)
-
+    nameposte=serializers.CharField(source='poste.nameposte',read_only=True)
+    catigory=serializers.CharField(source='poste.sinf.sinf',read_only=True )	
     indice=serializers.IntegerField(source='poste.sinf.numind',read_only=True)
     class Meta:
         model=Poste

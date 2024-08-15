@@ -55,8 +55,9 @@ class PosteV (viewsets.ModelViewSet):
         degret=Degret.objects.get(id=int(degret))
         poste=data['poste']
         poste=Postedispo.objects.get(id = int(poste)) 
-        sinf = poste.sinf
-        sinfval=sinf.numind
+        sinf = poste.sinf.id
+        sinfval=poste.sinf.numind
+        print(sinf,  degret)
         table=Table.objects.get(sinf=sinf,degret=degret)
         degretval = table.val
         slairebase=(sinfval+degretval)*45

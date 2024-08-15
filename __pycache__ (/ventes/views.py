@@ -105,7 +105,7 @@ async def getRestBills(request):
     selected_store = await get_store(request.session["store"])
 
     rest_bills = await sync_to_async(fetch_rest_bills)(selected_store, current_month)
-    print(rest_bills)
+    
     bills_data = []
     for bon in rest_bills:
         produits_en_bon_sorties = bon.produits_en_bon_sorties.all()
@@ -2803,6 +2803,8 @@ class ComptoirListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         context["entrepots"] = entrepots
         users_bills = CustomUser.objects.filter(EmployeeAt=selected_store)
         context["users"]=users_bills
+        print(len(context["bons_sorties"]))
+       
         return context
     
 class ComptoirRectificationListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -2885,6 +2887,7 @@ class ComptoirRetourListView(LoginRequiredMixin, UserPassesTestMixin, TemplateVi
         context["entrepots"] = entrepots
         users_bills = CustomUser.objects.filter(EmployeeAt=selected_store)
         context["users"]=users_bills
+        print(context)
         return context  
 
 class StockSellMagView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

@@ -21,7 +21,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
  {% include 'tabs.html' with active_tab="poste" %}
  <div class=" w-full flex flex-row">
 	{% include "sidebar_poste.html" %}
-  <div class="h-full w-full"  x-data="client()">
+  <div class="h-full w-full"  x-data="client()" x-init="init()">
 	<!-- Main content header -->
 	<main class="block w-full h-full px-2 overflow-hidden " >
           <div class="flex flex-col items-start justify-between space-y-4 border-b lg:items-center lg:space-y-0 lg:flex-row"  >                                                                                                                                                    
@@ -124,11 +124,11 @@ class="flex flex-col min-h-screen custom-scrollbar"
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Poste</th>
-                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Degret</th>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Categorie</th>
-                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Indice</th>
-                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Section</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">INDICE MINIMALE</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">INDICE d'echelon</th>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Administration</th>
+                                <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Section</th>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Prime d'Administration</th>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Autre Prime</th>
                                 <th class="px-6 py-3 text-sm font-bold tracking-wider text-center text-gray-500 uppercase">Salaire de Base</th>
@@ -138,14 +138,14 @@ class="flex flex-col min-h-screen custom-scrollbar"
                         </thead>
                     
                         <tbody class="bg-white divide-y divide-gray-200" >
-                            <template x-for="(item, index) in data_array" :key="index">
+                            <template x-for="(item, index) in postes" :key="index">
                                 <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
-                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.poste"></td>
-                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.degret"></td>
-                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.sinf"></td>
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.nameposte"></td>
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.catigory"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.indice"></td>
-                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.section"></td>
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.degret"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.administration"></td>
+                                    <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.section"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.primeAdministration"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.primeAutre"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.slairebase"></td>
@@ -321,7 +321,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 postedispo:'',
                 degrie:'',
                 categoret:'',
-              
+                postes:'',
                 indice:0,
                 section:'',
                 asministration:'',
@@ -345,13 +345,28 @@ class="flex flex-col min-h-screen custom-scrollbar"
               },
 
               
-              {% if data and dat  %}
-                data_array: {{ data | safe }},
-                dat_array:{{ dat | safe }},
-                administration_array:{{ administration | safe }},
-                section_array:{{ section | safe }},
+              fetchPosteGr() {
+                this.loading = true;
+                this.error = null;
+                
+                fetch('http://127.0.0.1:8000/api/poste/')  // Remplacez par l'URL de votre API
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    this.postes = json;
+                    console.log(this.poste)
+                })
+                .catch(error => {
+                    this.error = error.message;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });},
 
-              {% endif %}
 
               filteredPosts:[],
               get totalPages() {
@@ -475,6 +490,10 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 this.showModal = false;
                 this.productReference = '';
               },
+              init(){
+              this.fetchPosteGr(); 
+              },
+
 
               modifierFournisseur(){             
                 dataObj={
@@ -509,8 +528,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                   var form = document.getElementById('myForm');
                     form.reset();
               },
-            }
-          }
+            }}
          
           function getCookie(name) {
             var cookieValue = null;

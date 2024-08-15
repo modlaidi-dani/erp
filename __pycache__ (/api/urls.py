@@ -1,7 +1,7 @@
 from django.urls import path,include
 from rest_framework import routers
 from .views import *
-from .tempviews import SinfTemp , Postetemp
+from .tempviews import SinfTemp , Postetemp,PosteDispoTemp
 router = routers.DefaultRouter()
 router.register("sinf",SinfinV,basename="sinf")
 router.register("valerin",ValerinV,basename="valerin")
@@ -16,6 +16,8 @@ urlpatterns = [
     path('',include(router.urls)),
     path('sinftemp/', SinfTemp.as_view() , name='sinftemp'),
     path('postetemp/', Postetemp.as_view() , name='postetemp'),
+    path('postedispotemp/', PosteDispoTemp.as_view() , name='postedispotemp'),
+
     
 
 ]

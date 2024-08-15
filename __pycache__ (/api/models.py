@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class SinfInd(models.Model):
-    sinf=models.IntegerField()
+    sinf=models.CharField(max_length=100, null=True)
     numind=models.IntegerField()
     def __str__(self) -> str:
         return f"{self.sinf}"
