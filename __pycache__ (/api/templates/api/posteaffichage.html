@@ -318,7 +318,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
         <script>
           function client(){
             return{
-                postedispo:'',
+                postesdispo:'',
                 degrie:'',
                 categoret:'',
                 postes:'',
@@ -345,7 +345,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
               },
 
               
-              fetchPosteGr() {
+              fetchPoste() {
                 this.loading = true;
                 this.error = null;
                 
@@ -365,7 +365,27 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 })
                 .finally(() => {
                     this.loading = false;
-                });},
+                });
+              
+                fetch('http://127.0.0.1:8000/api/postedispo/')  // Remplacez par l'URL de votre API
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    this.postesdispo = json;
+                    console.log(this.postesdispo)
+                })
+                .catch(error => {
+                    this.error = error.message;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+              
+              },
 
 
               filteredPosts:[],
@@ -491,7 +511,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 this.productReference = '';
               },
               init(){
-              this.fetchPosteGr(); 
+              this.fetchPoste(); 
               },
 
 
