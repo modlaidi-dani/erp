@@ -40,6 +40,8 @@ class PosteSerializer(serializers.ModelSerializer):
     nameposte=serializers.CharField(source='poste.nameposte',read_only=True)
     catigory=serializers.CharField(source='poste.sinf.sinf',read_only=True )	
     indice=serializers.IntegerField(source='poste.sinf.numind',read_only=True)
+    administration= serializers.CharField(source='administration.name')
+    section=serializers.CharField(source="section.name")
     class Meta:
         model=Poste
         fields="__all__"
