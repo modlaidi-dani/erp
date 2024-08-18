@@ -21,7 +21,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
  {% include 'tabs.html' with active_tab="poste" %}
  <div class=" w-full flex flex-row">
 	{% include "sidebar_poste.html" %}
-  <div class="h-full w-full"  x-data="client()" x-init="init()">
+  <div class="h-full w-full"  x-data="client()" x-init="fetchData()">
 	<!-- Main content header -->
 	<main class="block w-full h-full px-2 overflow-hidden " >
           <div class="flex flex-col items-start justify-between space-y-4 border-b lg:items-center lg:space-y-0 lg:flex-row"  >                                                                                                                                                    
@@ -138,7 +138,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                         </thead>
                     
                         <tbody class="bg-white divide-y divide-gray-200" >
-                            <template x-for="(item, index) in postes" :key="index">
+                            <template x-for="(item, index) in poste" :key="index">
                                 <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.nameposte"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.catigory"></td>
@@ -247,20 +247,18 @@ class="flex flex-col min-h-screen custom-scrollbar"
                       </label>
                        <select
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          id="salarie"
-                          name="salarie"
-                          x-model="postedispo"
+                          x-model="postedispoId"
                           x-on:change="handleChange($event)"
                           required  
                           >
                         
-                          <template x-for="item in dat_array">
+                          <template x-for="item in postedispo">
                             <option x-bind:value="item.id" x-text="item.nameposte"></option>
                           </template>
                           
                       </select>
-                      <p class="mt-2">Valeur sélectionnée : <span x-text="sinf"></span></p>
-                      <p class="mt-2">Valeur sélectionnée : <span x-text="categoret"></span></p>
+                      <p class="mt-2">catigory : <span x-text="catigory"></span></p>
+                      <p class="mt-2">indice minimale  : <span x-text="indiceM"></span></p>
 
                   </div>
 
@@ -319,14 +317,14 @@ class="flex flex-col min-h-screen custom-scrollbar"
           function client(){
             return{
                 postesdispo:'',
-                degrie:'',
-                categoret:'',
+                catigory:'',
                 postes:'',
-                indice:0,
+                indiceM:'',
                 section:'',
                 asministration:'',
                 primeAdministration:'',
                 primeAutre:'',
+                postedispoId:'',
           
                 isOpen:false,
               printInvoice() {
@@ -345,47 +343,37 @@ class="flex flex-col min-h-screen custom-scrollbar"
               },
 
               
-              fetchPoste() {
+            
+              fetchData() {  
                 this.loading = true;
                 this.error = null;
-                
-                fetch('http://127.0.0.1:8000/api/poste/')  // Remplacez par l'URL de votre API
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    this.postes = json;
-                    console.log(this.poste)
-                })
-                .catch(error => {
+                const  url1 = 'http://127.0.0.1:8000/api/poste/';
+                const  url2 = 'http://127.0.0.1:8000/api/postedispo';
+                var respo; 
+                Promise.all([
+                    fetch(url1).then(response => response.json()),
+                    fetch(url2).then(response => response.json())
+                ]
+                )
+                .then((rest) => {
+                    console.log(rest)
+                    this.poste=rest[0],
+                    this.postedispo=rest[1]
+                    console.log(post)
+                    console.log(postesdispo)
+
+
+
+                  })
+                  .catch(error => {
                     this.error = error.message;
+                    console.error('Erreur:', this.error);
                 })
                 .finally(() => {
                     this.loading = false;
-                });
+                })
+            },
               
-                fetch('http://127.0.0.1:8000/api/postedispo/')  // Remplacez par l'URL de votre API
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    this.postesdispo = json;
-                    console.log(this.postesdispo)
-                })
-                .catch(error => {
-                    this.error = error.message;
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
-              
-              },
 
 
               filteredPosts:[],
@@ -427,13 +415,13 @@ class="flex flex-col min-h-screen custom-scrollbar"
                   );
               },
               handleChange(event) {
-                const onj = this.postedispo;
-                const selectedIndex = this.dat_array.findIndex(elm => elm.id == onj);
-                this.sinf= this.dat_array[selectedIndex].sinf
-                this.categoret= this.dat_array[selectedIndex].sinf
-                
+                const onj = this.postedispoId;
+                const selectedIndex = this.postedispo.findIndex(elm => elm.id == onj);
+                this.catigory= this.postedispo[selectedIndex].catigory
+       
+                this.indiceM= this.postedispo[selectedIndex].indiceM},
 
-                                  },
+
               addPoste(){ 
                 if (!this.motif) {
                     alert('Veuillez introduire le motif de l\'absence.');
@@ -510,9 +498,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                 this.showModal = false;
                 this.productReference = '';
               },
-              init(){
-              this.fetchPoste(); 
-              },
+
 
 
               modifierFournisseur(){             

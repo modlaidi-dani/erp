@@ -130,7 +130,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                             </thead>
                     
                         <tbody class="bg-white divide-y divide-gray-200" >
-                            <template x-for="(item, index) in data" :key="index">
+                            <template x-for="(item, index) in postedispo" :key="index">
                                 <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.nameposte"></td>
                                     <td class="px-6 py-4 text-sm font-semibold leading-5" x-text="item.catigory"></td>
@@ -220,78 +220,41 @@ class="flex flex-col min-h-screen custom-scrollbar"
                     d="M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z" />
                 </svg>
               </div>
-              <form method="POST" action="">
+              <form @submit.prevent="handleSubmit">
                 {% csrf_token %}
                 
                 <div class="bg-white">
-                    <h2 class="font-bold text-2xl mb-6 text-gray-800 border-b pb-2">Ajouter Une Absence</h2>
+                    <h2 class="font-bold text-2xl mb-6 text-gray-800 border-b pb-2">Ajouter Un poste </h2>
                     <div class="mb-4">
+                      <div class="form-group">
+                        <label for="nameposte">Name poste:</label>
+                        <input type="text" id="nameposte" name="nameposte" required>
+                       </div>
+                      <div class="form-group">
                       <label class="block text-gray-700 font-semibold mb-2" for="salarie">
-                      Salarié <span class="text-red-600">*</span>
+                        catigory <span class="text-red-600">*</span>
                       </label>
                        <select
                           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          id="salarie"
-                          name="salarie"
-                          x-model="postedispo"
+                          id="sinf"
+                          name="sinf"
+                          x-model="sinfLab"
                           x-on:change="handleChange($event)"
                           required  
                           >
                         
-                          <template x-for="item in dat_array">
-                            <option x-bind:value="item.id" x-text="item.nameposte"></option>
+                          <template x-for="item in sinf">
+                            <option x-bind:value="item.id" x-text="item.sinf"></option>
                           </template>
                           
                       </select>
-                      <p class="mt-2">Valeur sélectionnée : <span x-text="sinf"></span></p>
-                      <p class="mt-2">Valeur sélectionnée : <span x-text="categoret"></span></p>
+          
+                      <p class="mt-2">INDICE MINIMALE : <span x-text="indiceM"></span></p>
 
                   </div>
 
-                    <div class="form-group">
-                        <label for="degret">Degret:</label>
-                        <input type="text" id="degret" name="degret" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="primeAdministration">Prime d'Administration:</label>
-                        <input type="number" id="primeAdministration" name="primeAdministration" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="primeAutre">Autre Prime:</label>
-                        <input type="number" id="primeAutre" name="primeAutre" required>
-                    </div>
-                  </label>
-                  <div>
-                    <label class="block text-gray-700 font-semibold mb-2" >
-                      administration <span class="text-red-600">*</span>
-                      </label>
-                  <select
-                     class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                     required  
-                     >
-                     <option value="" disabled selected>Administration</option>	
-                     <template x-for="item in administration_array">
-                       <option x-bind:value="item.id" x-text="item.name"></option>
-                     </template>
-                 </select>
-             </div>
-             <div>
-              <label class="block text-gray-700 font-semibold mb-2" >
-                <Section>Section 
-                </label>
-              <select
-                 class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                 required  
-                 >
-                 <option value="" disabled selected>Section</option>	
-                 <template x-for="item in section_array">
-                   <option x-bind:value="item.id" x-text="item.name"></option>
-                 </template>
-             </select>
-           </div>
-           </div>                    <div class="form-group">
-                        <button  x-on:click="addPoste()">Créer</button>
+                           <div class="form-group">
+                        <button  x-on:click="isOpen = false">Créer</button>
                     </div>
                 </div>
             </form>
@@ -300,17 +263,35 @@ class="flex flex-col min-h-screen custom-scrollbar"
         <!-- /Modal -->
 
         <script>
+              function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Vérifie si ce cookie commence par le nom que nous voulons
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    } 
           function client(){
             return{
                 postedispo:'',
-                degrie:'',
-                categoret:'',
-              
+                catigory:1,
+                indiceM:400,
+                sinf:'',
                 indice:0,
                 section:'',
                 asministration:'',
                 primeAdministration:'',
                 primeAutre:'',
+                sinfLab:'',
+                poste:'',
+                nameposte:'',
           
                 isOpen:false,
               printInvoice() {
@@ -329,27 +310,59 @@ class="flex flex-col min-h-screen custom-scrollbar"
               },
 
               
-              fetchData() {
+              fetchData() {  
                 this.loading = true;
                 this.error = null;
-                
-                fetch('http://127.0.0.1:8000/api/postedispo/')  // Remplacez par l'URL de votre API
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    this.data = json;
-                    console.log(this.data)
-                })
-                .catch(error => {
+                const  url1 = 'http://127.0.0.1:8000/api/postedispo/';
+                const  url2 = 'http://127.0.0.1:8000/api/sinf/';
+                var respo; 
+                Promise.all([
+                    fetch(url1).then(response => response.json()),
+                    fetch(url2).then(response => response.json())
+                ]
+                )
+                .then((rest) => {
+                    console.log(rest)
+                    this.postedispo=rest[0],
+                    this.sinf=rest[1]
+
+
+                  })
+                  .catch(error => {
                     this.error = error.message;
+                    console.error('Erreur:', this.error);
                 })
                 .finally(() => {
                     this.loading = false;
-                });},
+                })
+            },
+            
+            
+            handleSubmit() {
+              const csrftoken = getCookie('csrftoken');
+              this.nameposte = document.getElementById('nameposte').value;
+              console.log(this.nameposte),
+              console.log(this.sinfLab),
+              
+              fetch('http://127.0.0.1:8000/api/postedispo/', {
+                method: 'POST',
+                
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, 
+                },                
+                body: JSON.stringify({ nameposte: this.nameposte, sinf:this.sinfLab }),
+            })
+            .then(response => (response.json(),
+            console.log(response)
+          ))
+            .then(data => {
+                console.log('Réponse du serveur:', data);
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'envoi des données:', error);
+            });
+        },
 
               filteredPosts:[],
               get totalPages() {
@@ -390,14 +403,14 @@ class="flex flex-col min-h-screen custom-scrollbar"
                   );
               },
               handleChange(event) {
-                const onj = this.postedispo;
-                const selectedIndex = this.dat_array.findIndex(elm => elm.id == onj);
-                this.sinf= this.dat_array[selectedIndex].sinf
-                this.categoret= this.dat_array[selectedIndex].sinf
+                const obj = this.sinfLab;
+                const selectedIndex = this.sinf.findIndex(elm => elm.sinf == obj);
+                this.catigory= this.sinf[selectedIndex].sinf
+                this.indiceM= this.sinf[selectedIndex].numind
                 
 
                                   },
-              addPoste(){ 
+              /*addPoste(){ 
                 if (!this.motif) {
                     alert('Veuillez introduire le motif de l\'absence.');
                     return;
@@ -436,7 +449,7 @@ class="flex flex-col min-h-screen custom-scrollbar"
                         alert(error)
                         window.location.reload() 
                     });
-              },
+              },*/
 
               confirmerSuppression() {
                   console.log(this.client_id)
